@@ -16,3 +16,7 @@ Sivustolla käyttäjä voi:
 Front-end -> html  
 Back-end -> Python, Flask  
 Databse -> SQLite db  
+
+***
+
+<sub>Ominaisuuksia päivitetään sitä mukaan kun ideoita tulee ja muistuu mieleen</sub>
