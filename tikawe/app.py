@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session
 from database import initiate_database, create_user, login_user, fetch_user
+from functions import token
 
 app = Flask(__name__)
-
+app.secret_key = token()
 initiate_database()
 
 loggedin_user = None
@@ -48,12 +49,20 @@ def login():
             return render_template('login.html', error=error_message)
         if result:
             print('debug3')
-            global loggedin_user
-            loggedin_user = result[0]
-            return redirect(f'/user/{loggedin_user}')
-
+            session['userid'] = result[0]
+            session['username'] = result[1]
+            return redirect('/')
     return render_template('login.html')
 
 @app.route('/user/<int:userid>')
 def user_page(userid):
-    return f'User page for {fetch_user(loggedin_user)}'
+    if session['userid']:
+        return render_template('userpage.html')
+    return redirect('/login')
+
+
+@app.route('/logout')
+def logout():
+    del session['userid']
+    del session['username']
+    return redirect('/')

@@ -8,8 +8,8 @@ def initiate_database() -> None:
 
     db.execute('''CREATE TABLE IF NOT EXISTS userdata (
         userid MEDIUMINT PRIMARY KEY,
-        username NVARCHAR(20) UNIQUE,
-        password TINYTEXT,
+        username NVARCHAR(20) UNIQUE NOT NULL,
+        password TINYTEXT NOT NULL,
         joindate VARCHAR(20)
     )''')
 
