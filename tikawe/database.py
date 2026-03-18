@@ -8,8 +8,9 @@ def initiate_database() -> None:
 
     db.execute('''CREATE TABLE IF NOT EXISTS userdata (
         userid MEDIUMINT PRIMARY KEY,
-        username VARCHAR(20) UNIQUE,
-        password TINYTEXT
+        username NVARCHAR(20) UNIQUE,
+        password TINYTEXT,
+        joindate VARCHAR(20)
     )''')
 
     db.execute('''CREATE TABLE IF NOT EXISTS posts (
@@ -27,7 +28,7 @@ def create_user(uname, pswrd) -> None:
     db = sqlite3.connect('database.db')
     try:
         db.execute('''INSERT INTO userdata
-            (userid, username, password) VALUES (?, ?, ?)
+            (userid, username, password, joindate) VALUES (?, ?, ?, datetime('now'))
         ''', (uid, username, password))
     except sqlite3.IntegrityError as e:
         db.close()
@@ -39,3 +40,27 @@ def fetch_userids() -> list:
     db = sqlite3.connect('database.db')
     userids = db.execute('''SELECT userid FROM userdata''').fetchall()
     return userids
+
+def fetch_user(uid):
+    db = sqlite3.connect('database.db')
+    result = db.execute('''SELECT username FROM userdata
+               WHERE userid = ?
+               ''', (uid,)).fetchone()[0]
+    return result
+
+def login_user(uname, pswrd) -> any:
+    db = sqlite3.connect('database.db')
+    epwrd = hashit(pswrd)
+    result = db.execute('''SELECT * FROM userdata
+               WHERE username = ?
+               ''', (uname,)).fetchall()
+    print(result)
+    if len(result) == 0:
+        return ValueError('Invalid username or password!')
+    result = result[0]
+    print(result)
+    print(epwrd == result[2])
+    if epwrd == result[2]:
+        return result[0:2]
+    return ValueError('Invalid username or password!')
+
