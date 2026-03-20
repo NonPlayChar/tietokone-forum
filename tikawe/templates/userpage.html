@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-  <title>{{ session.username }}</title>
-</head>
+{% block title %}Profiili{% endblock %}
 
-<body>
+{% block content %}
   <div>
-    <h1>{{ session.username }}</h1>
-    <p>Userpage</p>
-    <button onclick="window.location='/logout'">Logout</button>
+    <h1>Käyttäjän {{ session.username }} profiili</h1>
+    <p></p>
+    <button onclick="window.location='/logout'">Kirjaudu ulos</button>
   </div>
-</body>
 
-</html>
+{% endblock %}

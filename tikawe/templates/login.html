@@ -1,31 +1,25 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Login</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <div>
-            <form action="/login" method="POST">
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" required>
-                <br><br>
+{% extends 'base.html' %}
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <br><br>
+{% block title %}Kirjautuminen{% endblock %}
 
-                <input type="submit" value="Login">
-            </form>
-        </div>
-        <div>
-            {% if error %}
-                <p style="color: red;">{{ error }}</p>
-            {% endif %}
-        </div>
-    </body>
-</html>
+{% block content %}
+    <div>
+        <form action="/login" method="POST">
+            <label for="username">Käyttäjänimi:</label>
+            <input type="text" name="username" id="username" required>
+            <br><br>
+
+            <label for="password">Salasana:</label>
+            <input type="password" id="password" name="password" required>
+            <br><br>
+
+            <input type="submit" value="Kirjaudu sisään">
+        </form>
+    </div>
+    <div>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+{% endblock %}
+

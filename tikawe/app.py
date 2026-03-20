@@ -24,7 +24,8 @@ def register():
 
         if type(result) == Exception:
             print('Username already in use!')
-            return str(result)
+            error_message = str(result)
+            return render_template('register.html', error=error_message)
 
         return redirect('/success')
     return render_template('register.html')
@@ -32,7 +33,7 @@ def register():
 
 @app.route('/success')
 def success():
-    return "Registration successful!"
+    return render_template('success.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -66,3 +67,14 @@ def logout():
     del session['userid']
     del session['username']
     return redirect('/')
+
+@app.route('/create-post')
+def post_page():
+    if not session or not session['userid']:
+        return redirect('/login')
+        
+    return render_template('create-post.html')
+
+@app.route('/test')
+def test():
+    return render_template('test.html')

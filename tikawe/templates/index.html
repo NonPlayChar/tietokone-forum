@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-  <title>Etusivu</title>
-</head>
+{% block title %}Etusivu{% endblock %}
 
-<body>
+{% block content %}
   <div>
     <h1>Etusivu</h1>
     {% if not session.username %}
-    <button onclick="window.location='/register'">Register now!</button>
-    <button onclick="window.location='/login'">Login</button>
+    <p>Tervetuloa!</p>
     {% else %}
     <p>Kirjauduttu sisään käyttäjällä {{ session.username }}</p>
-    <button onclick="window.location='/user/{{ session.userid }}'">Go to userpage</button>
     {% endif %}
   </div>
-</body>
+{% endblock %}
 
-</html>

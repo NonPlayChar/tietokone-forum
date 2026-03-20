@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Forum{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
+    <header id="header">
+        <nav>
+            <ul>
+                <li id="home"><a href="/">Home</a></li>
+                {% if session.username %}
+                    <li><span>Tervetuloa, {{ session.username }}!</span></li>
+                    <li><a href="/user/{{ session.userid }}">Käyttäjäsivu</a></li>
+                    <li><a href="/create-post">Luo postaus</a></li>
+                    <li><a href="/logout" id="logout">Kirjaudu ulos</a></li>
+                {% else %}
+                    <li><a href="/login">Kirjaudu</a></li>
+                    <li><a href="/register">Luo käyttäjä</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Default content can go here -->
+        {% endblock %}
+    </main>
+</body>
+</html>
