@@ -1,9 +1,9 @@
 from flask import Flask, request, render_template, redirect, session
-from database import initiate_database, create_user, login_user, fetch_user
-from functions import token
+from database import initiate_database, create_user, login_user, fetch_user, create_post, fetch_posts
+from functions import secret_key
 
 app = Flask(__name__)
-app.secret_key = token()
+app.secret_key = secret_key()
 initiate_database()
 
 loggedin_user = None
@@ -11,7 +11,8 @@ loggedin_user = None
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    posts = fetch_posts()
+    return render_template('index.html', posts=posts)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -68,11 +69,20 @@ def logout():
     del session['username']
     return redirect('/')
 
-@app.route('/create-post')
+@app.route('/create-post', methods=['GET', 'POST'])
 def post_page():
     if not session or not session['userid']:
         return redirect('/login')
-        
+    if request.method == 'POST':
+        t = request.form['title']
+        cpu = request.form['cpu']
+        ram = request.form['ram']
+        gpu = request.form['gpu']
+        mbd = request.form['mbd']
+        storage = request.form['storage']
+        desc = request.form['desc']
+        create_post(session['userid'], t, cpu, ram, gpu, mbd, storage, repr(desc))
+        return redirect('/')
     return render_template('create-post.html')
 
 @app.route('/test')

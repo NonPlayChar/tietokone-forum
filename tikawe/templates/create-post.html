@@ -8,7 +8,29 @@
   </div>
   <div>
     <form action="/create-post" method="post">
+        <label for="title">Otsikko:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
 
+        <label for="cpu">Prosessori:</label><br>
+        <input type="text" name="cpu" id="cpu"><br><br>
+
+        <label for="ram">Muisti (RAM):</label><br>
+        <input type="text" name="ram" id="ram"><br><br>
+
+        <label for="gpu">Näytönohjain:</label><br>
+        <input type="text" name="gpu" id="gpu"><br><br>
+
+        <label for="mbd">Emolevy:</label><br>
+        <input type="text" name="mbd" id="mbd"><br><br>
+
+        <label for="storage">Tallennustila:</label><br>
+        <input type="text" name="storage" id="storage"><br><br>
+
+        <label for="desc">Kuvaus:</label><br>
+        <textarea name="desc" id="desc" rows="5" cols="40"></textarea><br><br>
+
+
+        <input type="submit" value="Luo postaus">
     </form>
   </div>
 {% endblock %}

@@ -16,9 +16,17 @@ def initiate_database() -> None:
     db.execute('''CREATE TABLE IF NOT EXISTS posts (
         postid INTEGER PRIMARY KEY,
         userid INTEGER,
+        title TEXT,
+        cpu TEXT,
+        ram TEXT,
+        gpu TEXT,
+        mbd TEXT,
+        storage TEXT,
+        desc TEXT,
         timestamp INT,
         FOREIGN KEY (userid) REFERENCES userdata(userid)
     )''')
+
     db.close()
     print('database: Ready!')
 
@@ -40,6 +48,11 @@ def fetch_userids() -> list:
     db = sqlite3.connect('database.db')
     userids = db.execute('''SELECT userid FROM userdata''').fetchall()
     return userids
+
+def fetch_postids() -> list:
+    db = sqlite3.connect('database.db')
+    postids = db.execute('''SELECT postid FROM posts''').fetchall()
+    return postids
 
 def fetch_user(uid):
     db = sqlite3.connect('database.db')
@@ -64,3 +77,31 @@ def login_user(uname, pswrd) -> any:
         return result[0:2]
     return ValueError('Invalid username or password!')
 
+def create_post(uid: int, t, c, r, g, m, s, d):
+    db = sqlite3.connect('database.db')
+    db.execute('''INSERT INTO posts
+                (postid, userid, title, cpu, ram, gpu, mbd, storage, desc, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                ''', (token(fetch_postids()), int(uid), t, c, r, g, m, s, d))
+    db.commit()
+    db.close()
+    return 'True'
+    # except Exception as e:
+    #     print('Error: ', e)
+    #     return 'False'
+
+def fetch_posts():
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    scan = cursor.execute("SELECT * FROM posts ORDER BY timestamp DESC")
+
+    column_names = [description[0] for description in cursor.description]
+    posts = list()
+
+    for row in scan:
+        post_dict = {column_names[i]: row[i] for i in range(len(column_names))}
+        posts.append(post_dict)
+    
+    db.close()
+    
+    print(posts)
+    return posts
