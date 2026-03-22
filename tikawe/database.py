@@ -67,12 +67,11 @@ def login_user(uname, pswrd) -> any:
     result = db.execute('''SELECT * FROM userdata
                WHERE username = ?
                ''', (uname,)).fetchall()
-    print(result)
+
     if len(result) == 0:
         return ValueError('Invalid username or password!')
     result = result[0]
-    print(result)
-    print(epwrd == result[2])
+
     if epwrd == result[2]:
         return result[0:2]
     return ValueError('Invalid username or password!')
@@ -103,5 +102,12 @@ def fetch_posts():
     
     db.close()
     
-    print(posts)
     return posts
+
+def fetch_post(postid: int):
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    fetch_result = cursor.execute('SELECT * FROM posts WHERE postid = ?', (postid, )).fetchall()[0]
+    column_names = [description[0] for description in cursor.description]
+    postdata = {column_names[i]: fetch_result[i] for i in range(len(column_names))}
+    return postdata

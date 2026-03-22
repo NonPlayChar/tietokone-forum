@@ -47,9 +47,33 @@ li#home {
 
 }
 
+a#post {
+    text-decoration: none;
+    color: white;
+}
+
+a#delete {
+    text-decoration: none;
+    padding: 3px;
+    border-radius: 3px;
+    background-color: rgb(138, 0, 0);
+    color: red;
+}
 
 div.post {
     padding: 30px;
-    border: 2px blue;
-    border-radius: 5px;
+    border: 5px;
+    border-color: rgb(28, 170, 90);
+    border-radius: 3px;
+    border-style: solid;
+    margin: 20px;
+}
+
+div#post-page {
+    padding: 30px;
+    border: 5px;
+    border-color: rgb(28, 170, 90);
+    border-radius: 3px;
+    border-style: solid;
+    margin: 20px;
 }

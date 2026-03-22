@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div>
+  <div id="post-page">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.desc }}</p>
+    <ul>
+        <li>cpu: {{ post.cpu }}</li>
+        <li>gpu: {{ post.gpu }}</li>
+        <li>ram: {{ post.ram }}</li>
+        <li>mbd: {{ post.mbd }}</li>
+        <li>storage: {{ post.storage }}</li>
+    </ul>
+    {% if session.userid == post.userid %}
+        <a href="/delete_post" id="delete">Delete post</a>
+    {% endif %}
+  </div>
+  <div>
+    <h2>Keskustelu</h2>
+    {% for comment in comments %}
+      <div class="comment">
+        <p>{{ comment.username }}: {{ comment.content }}</p>
+        <p>{{ comment.timestamp }}</p>
+      </div>
+    {% else %}
+      <p>Ei kommentteja.</p>
+    {% endfor %}
+  </div>
+  <footer><p>{{ post.timestamp }}</p></footer>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, session
-from database import initiate_database, create_user, login_user, fetch_user, create_post, fetch_posts
+from database import initiate_database, create_user, login_user, fetch_user, create_post, fetch_posts, fetch_post
 from functions import secret_key
 
 app = Flask(__name__)
@@ -38,9 +38,7 @@ def success():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print('debug1')
     if request.method == 'POST':
-        print('debug2')
         username = request.form['username']
         password = request.form['password']
 
@@ -50,17 +48,17 @@ def login():
             error_message = str(result)
             return render_template('login.html', error=error_message)
         if result:
-            print('debug3')
             session['userid'] = result[0]
             session['username'] = result[1]
             return redirect('/')
     return render_template('login.html')
 
 @app.route('/user/<int:userid>')
-def user_page(userid):
-    if session['userid']:
-        return render_template('userpage.html')
-    return redirect('/login')
+def user_page(userid: int):
+    if not session or not session['userid']:
+        return redirect('/login')
+    return render_template('userpage.html')
+
 
 
 @app.route('/logout')
@@ -70,7 +68,7 @@ def logout():
     return redirect('/')
 
 @app.route('/create-post', methods=['GET', 'POST'])
-def post_page():
+def posting_page():
     if not session or not session['userid']:
         return redirect('/login')
     if request.method == 'POST':
@@ -81,9 +79,13 @@ def post_page():
         mbd = request.form['mbd']
         storage = request.form['storage']
         desc = request.form['desc']
-        create_post(session['userid'], t, cpu, ram, gpu, mbd, storage, repr(desc))
+        create_post(session['userid'], t, cpu, ram, gpu, mbd, storage, desc)
         return redirect('/')
     return render_template('create-post.html')
+
+@app.route('/post/<int:postid>')
+def post_page(postid: int):
+    return render_template('post-page.html', post=fetch_post(postid))
 
 @app.route('/test')
 def test():
