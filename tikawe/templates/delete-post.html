@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete post{% endblock %}
+
+{% block content %}
+        <p>Oletko varma, että haluat haluat poistaa postauksen?</p>
+        <form action="/">
+            <input type="submit" value="Palaa takaisin">
+        <form action="/delete-post" method="post">
+            <input type="submit" value="Poista">
+        </form>
+{% endblock %}

@@ -87,6 +87,12 @@ def posting_page():
 def post_page(postid: int):
     return render_template('post-page.html', post=fetch_post(postid))
 
+@app.route('/delete-post')
+def delete_page(postid=None):
+    if not session or not session['userid']:
+        return redirect('/login')
+    return render_template('delete-post.html')
+
 @app.route('/test')
 def test():
     return render_template('test.html')
