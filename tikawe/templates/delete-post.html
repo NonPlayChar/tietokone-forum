@@ -4,9 +4,8 @@
 
 {% block content %}
         <p>Oletko varma, että haluat haluat poistaa postauksen?</p>
-        <form action="/">
-            <input type="submit" value="Palaa takaisin">
-        <form action="/delete-post" method="post">
-            <input type="submit" value="Poista">
+        <form action="/delete-post/{{ post.postid }}" method="post">
+            <input type="submit" name="action" value="Palaa takaisin">
+            <input type="submit" name="action" value="Poista">
         </form>
 {% endblock %}

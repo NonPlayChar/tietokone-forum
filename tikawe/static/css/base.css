@@ -2,6 +2,10 @@ body {
     font-family: Arial, sans-serif; /* Font for the entire page */
     background-color: #000000; /* Light gray background */
     color: white;
+    background-image: url('../images/background.png');
+    background-repeat: repeat; /* Tile the background image */
+    background-attachment: fixed; /* Allow the background image to scroll with the content */
+    background-size: auto; /*
 }
 
 nav {
@@ -50,6 +54,7 @@ li#home {
 a#post {
     text-decoration: none;
     color: white;
+
 }
 
 a#delete {
@@ -57,23 +62,38 @@ a#delete {
     padding: 3px;
     border-radius: 3px;
     background-color: rgb(138, 0, 0);
-    color: red;
+    color: rgb(71, 0, 0);
+}
+
+a#edit {
+    text-decoration: none;
+    padding: 3px;
+    border-radius: 3px;
+    background-color: rgb(0, 138, 0);
+    color: lightgreen;
 }
 
 div.post {
     padding: 30px;
     border: 5px;
-    border-color: rgb(28, 170, 90);
+    border-color: whitesmoke;
     border-radius: 3px;
     border-style: solid;
     margin: 20px;
+    background-image: url('../images/postbackground.png');
+    background-size: auto;
+    background-color: #000000;
 }
 
 div#post-page {
     padding: 30px;
     border: 5px;
-    border-color: rgb(28, 170, 90);
+    border-color: whitesmoke;
     border-radius: 3px;
     border-style: solid;
     margin: 20px;
+}
+
+header#header {
+    margin-bottom: 20px; /* Space below the header */
 }

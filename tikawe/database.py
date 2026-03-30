@@ -84,9 +84,6 @@ def create_post(uid: int, t, c, r, g, m, s, d):
     db.commit()
     db.close()
     return 'True'
-    # except Exception as e:
-    #     print('Error: ', e)
-    #     return 'False'
 
 def fetch_posts():
     db = sqlite3.connect('database.db')
@@ -104,6 +101,22 @@ def fetch_posts():
     
     return posts
 
+def fetch_userpost(userid: int) -> list:
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    userposts = cursor.execute('SELECT * FROM posts WHERE userid = ?', (userid, ))
+
+    column_names = [description[0] for description in cursor.description]
+    posts = list()
+
+    for row in userposts:
+        post_dict = {column_names[i]: row[i] for i in range(len(column_names))}
+        posts.append(post_dict)
+
+    db.close()
+
+    return posts
+
 def fetch_post(postid: int):
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
@@ -111,3 +124,43 @@ def fetch_post(postid: int):
     column_names = [description[0] for description in cursor.description]
     postdata = {column_names[i]: fetch_result[i] for i in range(len(column_names))}
     return postdata
+
+
+def search_post(query):
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    fetch_result = cursor.execute('''
+            SELECT *
+            FROM posts p
+            JOIN userdata u ON u.userid = p.userid        
+            WHERE p.desc LIKE ? OR p.title LIKE ?
+            ORDER BY p.timestamp DESC''', ("%" + query + "%", "%" + query + "%")).fetchall()
+    posts = list()
+    column_names = [description[0] for description in cursor.description]
+    for post in fetch_result:
+        postdata = {column_names[i]: post[i] for i in range(len(column_names))}
+        posts.append(postdata)
+    return posts
+
+
+def update_content(content, postid):
+    db = sqlite3.connect('database.db')
+    db.execute('''
+            UPDATE posts SET desc = ? WHERE postid = ?
+    ''', (content, postid))
+    db.commit()
+    db.close()
+    return True
+
+
+def delete_post(postid):
+    try:
+        db = sqlite3.connect('database.db')
+        db.execute('DELETE FROM posts WHERE postid = ?', (postid, ))
+        db.commit()
+        db.close()
+        return True
+    except Exception as e:
+        print('Error:', e)
+        db.close()
+        return False

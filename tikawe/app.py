@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template, redirect, session
-from database import initiate_database, create_user, login_user, fetch_user, create_post, fetch_posts, fetch_post
+from flask import Flask, request, render_template, redirect, session, abort
+from database import initiate_database, create_user, login_user, fetch_user, create_post, fetch_posts, fetch_post, fetch_userpost, delete_post, search_post, update_content
 from functions import secret_key
 
 app = Flask(__name__)
@@ -8,6 +8,9 @@ initiate_database()
 
 loggedin_user = None
 
+def isAuth():
+    # A function to check if the session is set and redirect if not
+    pass
 
 @app.route("/")
 def index():
@@ -55,9 +58,8 @@ def login():
 
 @app.route('/user/<int:userid>')
 def user_page(userid: int):
-    if not session or not session['userid']:
-        return redirect('/login')
-    return render_template('userpage.html')
+    posts = fetch_userpost(userid)
+    return render_template('userpage.html', posts=posts)
 
 
 
@@ -87,11 +89,43 @@ def posting_page():
 def post_page(postid: int):
     return render_template('post-page.html', post=fetch_post(postid))
 
-@app.route('/delete-post')
-def delete_page(postid=None):
+@app.route('/delete-post/<int:postid>', methods=['GET', 'POST'])
+def delete_page(postid):
     if not session or not session['userid']:
         return redirect('/login')
-    return render_template('delete-post.html')
+    post = fetch_post(postid)
+    post_author_id = post['userid']
+    if session['userid'] != post_author_id:
+        abort(403)
+    if request.method == 'POST':
+        if request.form['action'] == 'Poista':
+            delete_post(postid)
+            return redirect('/')
+        elif request.form['action'] == 'Palaa takaisin':
+            return redirect('/')
+    return render_template('delete-post.html', post=post)
+
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = search_post(query) if query else []
+    print(results)
+    return render_template("search.html", query=query, results=results)
+
+@app.route('/edit/<int:postid>', methods=['GET', 'POST'])
+def edit_page(postid):
+    if not session or not session['userid']:
+        return redirect('/login')
+    post = fetch_post(postid)
+    post_author_id = post['userid']
+    if session['userid'] != post_author_id:
+        abort(403)
+    if request.method == 'POST':
+        updated_desc = request.form['content']
+        print(update_content(updated_desc, postid))
+        return redirect(f'../post/{postid}')
+    return render_template('edit-post.html', post=post)
+
 
 @app.route('/test')
 def test():

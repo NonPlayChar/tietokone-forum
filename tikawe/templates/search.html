@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %} Haku {% endblock %}
+
+{% block content %}
+    <div>
+        <form action="/search" method="get">
+            <p>
+            Hakusana:
+            {% if query %}
+            <input type="text" name="query" value="{{ query }}" />
+            {% else %}
+            <input type="text" name="query" />
+            {% endif %}
+            </p>
+            <input type="submit" value="Hae" />
+        </form>
+    </div>
+
+    {% if query %}
+    <hr />
+    <h2>Tulokset</h2>
+
+    <ul>
+    {% for result in results %}
+    <li>
+        <a href="/post/{{ result.postid }}">
+            {{ result.title }}
+        </a>
+        <br>
+        {{ result.userid }} ({{ result.timestamp }})
+    </li>  
+    {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}

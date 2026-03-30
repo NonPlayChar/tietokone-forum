@@ -15,7 +15,8 @@
         <li>storage: {{ post.storage }}</li>
     </ul>
     {% if session.userid == post.userid %}
-        <a href="/delete-post" id="delete">Delete post</a>
+        <a href="/delete-post/{{ post.postid }}" id="delete">Poista postaus</a>
+        <a href="/edit/{{ post.postid }}" id="edit">Muokkaa postausta</a>
     {% endif %}
   </div>
   <div>

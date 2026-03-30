@@ -9,4 +9,23 @@
     <button onclick="window.location='/logout'">Kirjaudu ulos</button>
   </div>
 
+  <div>
+    <h2>Postaukset</h2>
+    {% for post in posts %}
+      <a href="/post/{{ post.postid }}" id="post">
+        <div class="post">
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.desc }}</p>
+          <p>{{ post.timestamp }}</p>
+          {% if session.userid == post.userid %}
+            <a href="/delete-post/{{ post.postid }}" id="delete">Poista postaus</a>
+            <a href="/edit/{{ post.postid }}" id="edit">Muokkaa postausta</a>
+          {% endif %}
+        </div>
+      </a>
+    {% else %}
+      <p>Ei postauksia.</p>
+    {% endfor %}
+  </div>
+
 {% endblock %}
