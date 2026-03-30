@@ -1,22 +1,29 @@
-# Tietokone keskustelupalsta
+# Keskustelu palsta verkkosivusto
 
-Nettisivu jossa käyttäjät voivat jakaa tietoja omasta tietokoneesta, sekä arvostella ja kommentoida näitä.
-
-Sivustolla käyttäjä voi:
-- Luoda, muokata ja poistaa
-  - Käyttäjän
-  - Postauksia
-  - Kommentteja
-  - Arvosteluja
-- Esikatsella uusimpia postauksia
-- Avata postauksia
-- Vierailla muiden käyttäjien sivuja  
-  
-  
-Front-end -> html  
-Back-end -> Python, Flask  
-Databse -> SQLite db  
-
+Verkkosovelluksen toimintaa voi kokeilla seuraavanlaisesti:
+<br><br>
+<b>Sovelluksen ylösajaminen</b>
+1. Lataa ja pura zip-tiedosto
+2. Aseta nykiseksi hakemistoksi kansio `/tikawe` ja aja komento `flask app`
+3. Avaa sovellus seuraamalla linkkiä komentoriviltä esim.`127.0.0.1:5000`
 ***
+<br>
+Tämän jälkeen voimme aloittaa kokeilemaan kuinka verkkosivusto toimii
+<br><br>
 
-<sub>Ominaisuuksia päivitetään sitä mukaan kun ideoita tulee ja muistuu mieleen</sub>
+1. Luo käyttäjä, aseta käyttäjänimi ja salasana
+2. Kirjaudu käyttäjällä sisään
+3. Luo uusi postaus <i>(Tarkempi formaatti vielä tuotannossa)</i>
+<br>Postaus näkyy nyt kotisivulla ja käyttäjän profiilissa
+4. Sisään kirjautuneena, omaa postausta voi muokata tai sen voi poistaa postauksen sivulta tai profiilista
+5. Haku toiminto hakee kaikki postaukset, jossa hakukenttään laitettu merkkijono ilmenee joko postauksen otsikossa tai vapaassa tekstikentässä
+***
+<br><br>
+
+# Todo
+Sivustossa on vielä paljon asioita jotka tulee käsitellä ennen lopullista palautusta.<br>
+Error handling, edge cases, turvatoiminnot, QoL toimintoja, mahdollinen CSS:n hiominen, postaukseen kommentoimisen mahdollisuus, kuvien lisääminen, profiilin muokkaaminen, tunnettujen haavoittuvuuksien käsittely, mahdollinen ylläpito käyttäjä, debuging consoliin.
+
+<br><br><br>
+***
+<sub>Ominaisuuksia päivitetään sitä mukaan kun ideoita tulee ja muistuu mieleen<br>Toive ja tavoite kurssiarvosanaksi on 5 joten sen mukainen sivusto on tavoitteena tehdäkkin</sub>
