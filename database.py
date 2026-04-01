@@ -22,7 +22,7 @@ def initiate_database() -> None:
         postid INTEGER PRIMARY KEY,
         userid INTEGER,
         title TEXT,
-        desc TEXT,
+        content TEXT,
         timestamp INT,
         FOREIGN KEY (userid) REFERENCES userdata(userid)
     )''')
@@ -81,7 +81,7 @@ def login_user(uname, pswrd) -> any:
 def create_post(uid: int, t, d):
     db = sqlite3.connect('database.db')
     db.execute('''INSERT INTO posts
-                (postid, userid, title, desc, timestamp) VALUES (?, ?, ?, ?, datetime('now'))
+                (postid, userid, title, content, timestamp) VALUES (?, ?, ?, ?, datetime('now'))
                 ''', (token(fetch_postids()), int(uid), t, d))
     db.commit()
     db.close()
@@ -127,7 +127,7 @@ def search_post(query):
             SELECT *
             FROM posts p
             JOIN userdata u ON u.userid = p.userid        
-            WHERE p.desc LIKE ? OR p.title LIKE ?
+            WHERE p.content LIKE ? OR p.title LIKE ?
             ORDER BY p.timestamp DESC''', ("%" + query + "%", "%" + query + "%")).fetchall()
     posts = list()
     column_names = [description[0] for description in cursor.description]
@@ -139,7 +139,7 @@ def search_post(query):
 def update_content(content, postid):
     db = sqlite3.connect('database.db')
     db.execute('''
-            UPDATE posts SET desc = ? WHERE postid = ?
+            UPDATE posts SET content = ? WHERE postid = ?
     ''', (content, postid))
     db.commit()
     db.close()
