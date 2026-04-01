@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Käyttäjän luonti{% endblock %}
+
+{% block content %}
+<div id='container'>
+    <div id="login-form">
+        <h2 id="logintitle">Rekisteröityminen</h2>
+        <form action="/register" method="POST" id="login-form">
+            <label id='username' for="username">Käyttäjänimi</label>
+            <br>
+            <input type="text" name="username" id="username" required>
+            <br><br>
+
+            <label id='password' for="password">Salasana</label>
+            <br>
+            <input type="password" id="password" name="password" required>
+            <br><br>
+
+            <input type="submit" value="Luo käyttäjä">
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+<div>
+{% endblock %}

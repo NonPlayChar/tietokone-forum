@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Etusivu{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Etusivu</h1>
+    {% if not session.get('username') %}
+    <p>Tervetuloa!</p>
+    {% else %}
+    <p>Kirjauduttu sisään käyttäjällä {{ session.get('username') }}</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <h2>Viimeisimmät postaukset</h2>
+    {% for post in posts %}
+      <a href="/post/{{ post.get('postid') }}" id="post">
+        <div class="post">
+          <h3>{{ post.get('title') }}</h3>
+          <p>{{ post.get('desc') }}</p>
+          <p>{{ post.get('timestamp') }}</p>
+        </div>
+      </a>
+    {% else %}
+      <p>Ei postauksia.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
+

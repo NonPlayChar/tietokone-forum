@@ -11,13 +11,14 @@
         <nav>
             <ul>
                 <li id="home"><a href="/">Home</a></li>
-                {% if session.username %}
-                    <li><span>Tervetuloa, {{ session.username }}!</span></li>
+                {% if session.get('userid') %}
+                    <li><span>Tervetuloa, {{ session.get('username') }}!</span></li>
                     <li><a href="/search">Haku</a></li>
-                    <li><a href="/user/{{ session.userid }}">Käyttäjäsivu</a></li>
+                    <li><a href="/user/{{ session.get('userid') }}">Käyttäjäsivu</a></li>
                     <li><a href="/create-post">Luo postaus</a></li>
                     <li><a href="/logout" id="logout">Kirjaudu ulos</a></li>
                 {% else %}
+                    <li><a href="/search">Haku</a></li>
                     <li><a href="/login">Kirjaudu</a></li>
                     <li><a href="/register">Luo käyttäjä</a></li>
                 {% endif %}

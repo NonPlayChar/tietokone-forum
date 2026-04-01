@@ -21,16 +21,14 @@
     <hr />
     <h2>Tulokset</h2>
 
-    <ul>
     {% for result in results %}
-    <li>
-        <a href="/post/{{ result.postid }}">
-            {{ result.title }}
+        <a href="/post/{{ result.get('postid') }}" id="post">
+            <div class="post">
+                <h3>{{ result.get('title') }}</h3>
+                <p>{{ result.get('desc') }}</p>
+                <p>{{ result.get('timestamp') }}</p>
+            </div>
         </a>
-        <br>
-        {{ result.userid }} ({{ result.timestamp }})
-    </li>  
     {% endfor %}
-    </ul>
     {% endif %}
 {% endblock %}

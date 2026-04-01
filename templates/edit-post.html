@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.get('title') }}{% endblock %}
+
+{% block content %}
+<div>
+  <div id="post-page">
+    <h1>{{ post.get('title') }}</h1>
+    <form action="/edit/{{ post.get('postid') }}" method="post">
+        <textarea name="content" rows="5" cols="40">{{ post.get('desc') }}</textarea>
+        <br><br>
+        <input type="submit" value="Päivitä postaus">
+    </form>
+  </div>
+  <footer><p>{{ post.get('timestamp') }}</p></footer>
+</div>
+{% endblock %}

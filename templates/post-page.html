@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.get('title') }}{% endblock %}
+
+{% block content %}
+<div>
+  <div id="post-page">
+    <h1>{{ post.get('title') }}</h1>
+    <p>{{ post.get('desc') }}</p>
+    {% if session.get('userid') == post.get('userid') %}
+        <a href="/delete-post/{{ post.get('postid') }}" id="delete">Poista postaus</a>
+        <a href="/edit/{{ post.get('postid') }}" id="edit">Muokkaa postausta</a>
+    {% endif %}
+  </div>
+  <div>
+    <h2>Keskustelu</h2>
+    {% for comment in comments %}
+      <div class="comment">
+        <p>{{ comment.get('username') }}: {{ comment.get('content') }}</p>
+        <p>{{ comment.get('timestamp') }}</p>
+      </div>
+    {% else %}
+      <p>Ei kommentteja.</p>
+    {% endfor %}
+  </div>
+  <footer><p>{{ post.get('timestamp') }}</p></footer>
+</div>
+{% endblock %}

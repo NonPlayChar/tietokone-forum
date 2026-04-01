@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Kirjautuminen{% endblock %}
+
+{% block content %}
+<div id='container'>
+    <div id="login-form">
+        <h2 id="logintitle">Sisään kirjautuminen</h2>
+        <form action="/login" method="POST" id="login-form">
+            <label for="username" id="username">Käyttäjänimi</label>
+            <br>
+            <input type="text" name="username" id="username" required>
+            <br><br>
+
+            <label for="password" id="password">Salasana</label>
+            <br>
+            <input type="password" id="password" name="password" required>
+            <br><br>
+
+            <input type="submit" value="Kirjaudu sisään">
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

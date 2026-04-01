@@ -57,20 +57,27 @@ a#post {
 
 }
 
+div div#post-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
 a#delete {
     text-decoration: none;
     padding: 3px;
     border-radius: 3px;
-    background-color: rgb(138, 0, 0);
-    color: rgb(71, 0, 0);
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
 }
 
 a#edit {
     text-decoration: none;
     padding: 3px;
     border-radius: 3px;
-    background-color: rgb(0, 138, 0);
-    color: lightgreen;
+    background-color: rgb(90, 90, 90);
+    color: rgb(232, 232, 232);
 }
 
 div.post {
@@ -96,4 +103,66 @@ div#post-page {
 
 header#header {
     margin-bottom: 20px; /* Space below the header */
+}
+
+div#container {
+    display: flex;
+    justify-content: center; /* Center the container horizontally */
+    align-items: center; /* Center the container vertically */
+    height: 80vh; /* Set a height for vertical centering */
+}
+
+div#login-form {
+    background-color: #2e2e2e;
+    padding: 20px;
+    border-radius: 9px;
+    width: 500px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto; /* Center the form horizontally */
+
+}
+
+form#login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+label#username, label#password {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+form#login-form input[type="text"], form#login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: solid;
+    border-color: rgb(29, 29, 29);
+    border-radius: 4px;
+    background-color: #646464;
+}
+
+form#login-form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #acacac; /* Green background */
+    color: white; /* White text */
+    border: solid;
+    border-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+h2#logintitle {
+    font-size: 40px;
+    border: solid;
+    border-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    padding: 20px;
 }

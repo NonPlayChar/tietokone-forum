@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Luo postaus{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Luo postaus</h1>
+  </div>
+  <div>
+    <form action="/create-post" method="post">
+        <label for="title">Otsikko:</label><br>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="content">Sisältö:</label><br>
+        <textarea name="content" id="content" rows="10" cols="100"></textarea><br><br>
+
+
+        <input type="submit" value="Luo postaus">
+    </form>
+  </div>
+{% endblock %}

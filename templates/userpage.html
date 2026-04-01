@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Profiili{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Käyttäjän {{ user.get('username') }} profiili</h1>
+    <p></p>
+  </div>
+
+  <div>
+    <h2>Postaukset</h2>
+    {% for post in posts %}
+      <a href="/post/{{ post.get('postid') }}" id="post">
+        <div class="post">
+          <h3>{{ post.get('title') }}</h3>
+          <p>{{ post.get('desc') }}</p>
+          <p>{{ post.get('timestamp') }}</p>
+          {% if session.get('userid') == post.get('userid') %}
+          <div id ="post-actions">
+              <a href="/delete-post/{{ post.get('postid') }}" id="delete">Poista postaus</a>
+              <a href="/edit/{{ post.get('postid') }}" id="edit">Muokkaa postausta</a>
+          </div>
+          {% endif %}
+        </div>
+      </a>
+    {% else %}
+      <p>Ei postauksia.</p>
+    {% endfor %}
+  </div>
+
+{% endblock %}
