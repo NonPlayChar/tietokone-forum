@@ -26,4 +26,4 @@ Error handling, edge cases, turvatoiminnot, QoL toimintoja, mahdollinen CSS:n hi
 
 <br><br><br>
 ***
-<sub>Ominaisuuksia päivitetään sitä mukaan kun ideoita tulee ja muistuu mieleen<br>Toive ja tavoite kurssiarvosanaksi on 5 joten sen mukainen sivusto on tavoitteena tehdäkkin</sub>
+<sub>Ominaisuuksia päivitetään sitä mukaan kun ideoita tulee ja muistuu mieleen</sub>
