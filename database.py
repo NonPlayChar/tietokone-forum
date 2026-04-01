@@ -8,26 +8,12 @@ def to_dict(key, value) -> dict:
 
 def initiate_database() -> None:
     print('database: Initiating database')
-    db = sqlite3.connect('database.db')
 
-    db.execute('''CREATE TABLE IF NOT EXISTS userdata (
-        userid MEDIUMINT PRIMARY KEY,
-        username NVARCHAR(20) UNIQUE NOT NULL,
-        password TINYTEXT NOT NULL,
-        pfp BLOB,
-        joindate VARCHAR(20)
-    )''')
-
-    db.execute('''CREATE TABLE IF NOT EXISTS posts (
-        postid INTEGER PRIMARY KEY,
-        userid INTEGER,
-        title TEXT,
-        content TEXT,
-        timestamp INT,
-        FOREIGN KEY (userid) REFERENCES userdata(userid)
-    )''')
-
-    db.close()
+    with sqlite3.connect('database.db') as conn, open('schema.sql', 'r') as f:
+        schema = f.read()
+        conn.executescript(schema)
+    
+    conn.close()
     print('database: Ready!')
 
 def create_user(uname, pswrd, pfp=None) -> None:
