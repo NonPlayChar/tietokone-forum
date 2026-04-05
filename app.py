@@ -56,6 +56,7 @@ def register():
 def success():
     return render_template('success.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -118,13 +119,6 @@ def delete_page(postid):
     return render_template('delete-post.html', post=post)
 
 
-@app.route("/search")
-def search():
-    query = request.args.get("query")
-    results = db.search_post(query) if query else []
-    return render_template("search.html", query=query, results=results)
-
-
 @app.route('/edit/<int:postid>', methods=['GET', 'POST'])
 @isAuth
 def edit_page(postid, post):
@@ -133,6 +127,13 @@ def edit_page(postid, post):
         db.update_content(postid, updated_desc)
         return redirect(url_for('post_page', postid=postid))
     return render_template('edit-post.html', post=post)
+
+
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = db.search_post(query) if query else []
+    return render_template("search.html", query=query, results=results)
 
 
 @app.route('/test')
