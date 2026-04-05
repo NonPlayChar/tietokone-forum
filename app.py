@@ -108,11 +108,6 @@ def post_page(postid: int):
     if request.method == 'POST':
         if not session.get('userid'):
             return redirect(url_for('login'))
-        if request.form['action'] == 'Poista':
-            db.delete_post(postid)
-            return redirect(url_for('index'))
-        elif request.form['action'] == 'Palaa takaisin':
-            return redirect(url_for('index'))
     return render_template('post-page.html', post=db.fetch_post(postid))
 
 
