@@ -19,7 +19,7 @@ def initiate_database() -> None:
 
 
 
-def create_user(uname, pswrd, pfp=None) -> None:
+def create_user(uname, pswrd, pfp=None):
     username, password, uid = uname, hashit(pswrd), token(fetch_userids())
     
     db = sqlite3.connect('database.db')
@@ -27,7 +27,7 @@ def create_user(uname, pswrd, pfp=None) -> None:
         db.execute('''INSERT INTO userdata
             (userid, username, password, pfp, joindate) VALUES (?, ?, ?, ?, datetime('now'))
         ''', (uid, username, password, pfp))
-    except sqlite3.IntegrityError as e:
+    except sqlite3.IntegrityError:
         db.close()
         return Exception('Username already in use!')
     db.commit()
@@ -142,7 +142,7 @@ def search_post(query):
     db = sqlite3.connect('database.db')
     cursor = db.cursor()
     fetch_result = cursor.execute('''
-            SELECT postid, userid, title, content, timestamp
+            SELECT p.postid, p.userid, p.title, p.content, p.timestamp
             FROM posts p
             JOIN userdata u ON u.userid = p.userid        
             WHERE p.content LIKE ? OR p.title LIKE ?
