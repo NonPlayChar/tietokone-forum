@@ -15,7 +15,7 @@ def isAuth(f):
     def wrapper(postid, *args, **kwargs):
         user_id = session.get('userid')
         if not user_id:
-            return redirect(url_for('login', next=request.url))
+            return redirect(url_for('login'))
         if not postid:
             return f(*args, **kwargs)
         post = db.fetch_post(postid)
@@ -59,6 +59,7 @@ def success():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    next_url = request.args.get('next')
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -71,7 +72,7 @@ def login():
         if result:
             session['userid'] = result[0]
             session['username'] = result[1]
-            return redirect(url_for('index'))
+            return redirect(next_url or url_for('index'))
     return render_template('login.html')
 
 
@@ -132,7 +133,7 @@ def delete_page(postid, post):
 def edit_page(postid, post):
     if request.method == 'POST':
         updated_desc = request.form['content']
-        db.update_content(postid, updated_desc)
+        db.update_content(updated_desc, postid)
         return redirect(url_for('post_page', postid=postid))
     return render_template('edit-post.html', post=post)
 
