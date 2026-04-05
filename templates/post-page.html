@@ -6,7 +6,7 @@
 <div>
   <div id="post-page">
     <h1>{{ post.get('title') }}</h1>
-    <p>{{ post.get('desc') }}</p>
+    <p>{{ post.get('content') }}</p>
     {% if session.get('userid') == post.get('userid') %}
         <a href="/delete-post/{{ post.get('postid') }}" id="delete">Poista postaus</a>
         <a href="/edit/{{ post.get('postid') }}" id="edit">Muokkaa postausta</a>

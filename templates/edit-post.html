@@ -7,7 +7,7 @@
   <div id="post-page">
     <h1>{{ post.get('title') }}</h1>
     <form action="/edit/{{ post.get('postid') }}" method="post">
-        <textarea name="content" rows="5" cols="40">{{ post.get('desc') }}</textarea>
+        <textarea name="content" rows="5" cols="40">{{ post.get('content') }}</textarea>
         <br><br>
         <input type="submit" value="Päivitä postaus">
     </form>
