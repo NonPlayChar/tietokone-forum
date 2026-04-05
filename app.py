@@ -17,7 +17,7 @@ def isAuth(f):
         if not user_id:
             return redirect(url_for('login', next=request.url))
         if not postid:
-            return f(postid, *args, post=post, **kwargs)
+            return f(*args, **kwargs)
         post = db.fetch_post(postid)
         if not post:
             return abort(404)
@@ -48,7 +48,7 @@ def register():
             error_message = str(result)
             return render_template('register.html', error=error_message)
 
-        return redirect('/success')
+        return redirect(url_for('success'))
     return render_template('register.html')
 
 
@@ -71,7 +71,7 @@ def login():
         if result:
             session['userid'] = result[0]
             session['username'] = result[1]
-            return redirect('/')
+            return redirect(url_for('index'))
     return render_template('login.html')
 
 
@@ -87,35 +87,43 @@ def user_page(userid: int):
 def logout():
     session.pop('userid')
     session.pop('username')
-    return redirect('/')
+    return redirect(url_for('index'))
 
 
 @app.route('/create-post', methods=['GET', 'POST'])
 def posting_page():
     if not session.get('userid'):
-        return redirect('/login')
+        return redirect(url_for('login'))
     if request.method == 'POST':
         t = request.form['title']
         content = request.form['content']
         db.create_post(session['userid'], t, content)
-        return redirect('/')
+        return redirect(url_for('index'))
     return render_template('create-post.html')
 
 
-@app.route('/post/<int:postid>')
+@app.route('/post/<int:postid>', methods=['GET', 'POST'])
 def post_page(postid: int):
+    if request.method == 'POST':
+        if not session.get('userid'):
+            return redirect(url_for('login'))
+        if request.form['action'] == 'Poista':
+            db.delete_post(postid)
+            return redirect(url_for('index'))
+        elif request.form['action'] == 'Palaa takaisin':
+            return redirect(url_for('index'))
     return render_template('post-page.html', post=db.fetch_post(postid))
 
 
 @app.route('/delete-post/<int:postid>', methods=['GET', 'POST'])
 @isAuth
-def delete_page(postid):
+def delete_page(postid, post):
     if request.method == 'POST':
         if request.form['action'] == 'Poista':
-            delete_post(postid)
-            return redirect('/')
+            db.delete_post(postid)
+            return redirect(url_for('index'))
         elif request.form['action'] == 'Palaa takaisin':
-            return redirect('../')
+            return redirect(url_for('index'))
     return render_template('delete-post.html', post=post)
 
 
