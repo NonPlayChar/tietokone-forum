@@ -35,3 +35,13 @@ CREATE TABLE IF NOT EXISTS page_stats (
   likes       INTEGER NOT NULL DEFAULT 0,
   UNIQUE(target_type, target_id)
 );
+
+CREATE TABLE IF NOT EXISTS page_likes (
+  likeid      INTEGER PRIMARY KEY,
+  userid      INTEGER NOT NULL,
+  target_type TEXT NOT NULL CHECK(target_type IN ('user','post')),
+  target_id   INTEGER NOT NULL,
+  created     TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(userid, target_type, target_id),
+  FOREIGN KEY(userid) REFERENCES userdata(userid) ON DELETE CASCADE
+);
