@@ -11,9 +11,18 @@
         <a href="/delete-post/{{ post.get('postid') }}" id="delete">Poista postaus</a>
         <a href="/edit/{{ post.get('postid') }}" id="edit">Muokkaa postausta</a>
     {% endif %}
+    <p>{{ post.get('timestamp') }}</p>
   </div>
-  <div>
+  <div id="comments">
     <h2>Keskustelu</h2>
+    {% if session.get('userid') %}
+    <form action="/post/{{ post.get('postid') }}" method="post">
+        <textarea name="comment" rows="4" cols="50"></textarea>
+        <br><br>
+        <input type="submit" value="Lähetä kommentti">
+    </form>
+    {% endif %}
+    <br>
     {% for comment in comments %}
       <div class="comment">
         <p>{{ comment.get('username') }}: {{ comment.get('content') }}</p>
@@ -23,6 +32,5 @@
       <p>Ei kommentteja.</p>
     {% endfor %}
   </div>
-  <footer><p>{{ post.get('timestamp') }}</p></footer>
 </div>
 {% endblock %}

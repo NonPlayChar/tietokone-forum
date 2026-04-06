@@ -154,6 +154,27 @@ def search_post(query):
     return posts
 
 
+def create_comment(uid, postid, comment):
+    db = sqlite3.connect('database.db')
+    db.execute('''INSERT INTO comments
+                (commentid, postid, userid, content, timestamp) VALUES (?, ?, ?, ?, datetime('now'))
+                ''', (token(fetch_commentids()), postid, uid, comment))
+    db.commit()
+    db.close()
 
 
+def fetch_commentids() -> list:
+    db = sqlite3.connect('database.db')
+    commentids = db.execute('''SELECT commentid FROM comments''').fetchall()
+    return commentids
 
+
+def fetch_comments(postid):
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    fetch_result = cursor.execute('SELECT commentid, postid, userid, content, timestamp FROM comments WHERE postid = ? ORDER BY timestamp DESC', (postid, )).fetchall()
+    column_names = [description[0] for description in cursor.description]
+    comments = list()
+    for comment in fetch_result:
+        comments.append(to_dict(column_names, comment))
+    return comments

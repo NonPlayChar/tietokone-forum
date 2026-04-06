@@ -108,7 +108,15 @@ def post_page(postid: int):
     if request.method == 'POST':
         if not session.get('userid'):
             return redirect(url_for('login'))
-    return render_template('post-page.html', post=db.fetch_post(postid))
+        comment = request.form['comment']
+        db.create_comment(session['userid'], postid, comment)
+        redirect(url_for('post_page', postid=postid))
+
+    post = db.fetch_post(postid)
+    comments = db.fetch_comments(postid)
+    for comment in comments:
+        comment['username'] = db.fetch_user(comment['userid']).get('username')
+    return render_template('post-page.html', post=post, comments=comments)
 
 
 @app.route('/delete-post/<int:postid>', methods=['GET', 'POST'])
