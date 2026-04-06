@@ -81,11 +81,11 @@ def create_post(uid: int, t, d):
     db.close()
 
 
-def update_content(content, postid):
+def update_content(title, content, postid):
     db = get_db()
     db.execute('''
-            UPDATE posts SET content = ? WHERE postid = ?
-    ''', (content, postid))
+            UPDATE posts SET title = ?, content = ? WHERE postid = ?
+    ''', (title, content, postid))
     db.commit()
     db.close()
     return True
@@ -219,3 +219,59 @@ def increment_page_likes(target_type, target_id):
     db.execute('UPDATE page_stats SET likes = likes + 1 WHERE target_type = ? AND target_id = ?', (target_type, target_id))
     db.commit()
     db.close()
+
+
+def has_user_liked(target_type, target_id, userid):
+    db = get_db()
+    row = db.execute(
+        'SELECT 1 FROM page_likes WHERE target_type = ? AND target_id = ? AND userid = ?',
+        (target_type, target_id, userid)
+    ).fetchone()
+    db.close()
+    return row is not None
+
+
+def create_page_like(target_type, target_id, userid):
+    db = get_db()
+    try:
+        db.execute(
+            'INSERT INTO page_likes (userid, target_type, target_id) VALUES (?, ?, ?)',
+            (userid, target_type, target_id)
+        )
+        db.commit()
+        db.close()
+    except sqlite3.IntegrityError:
+        db.close()
+        return False
+
+    increment_page_likes(target_type, target_id)
+    return True
+
+
+def decrement_page_likes(target_type, target_id):
+    db = get_db()
+    db.execute('INSERT OR IGNORE INTO page_stats (target_type, target_id) VALUES (?, ?)', (target_type, target_id))
+    db.execute('UPDATE page_stats SET likes = CASE WHEN likes > 0 THEN likes - 1 ELSE 0 END WHERE target_type = ? AND target_id = ?', (target_type, target_id))
+    db.commit()
+    db.close()
+
+
+def delete_page_like(target_type, target_id, userid):
+    db = get_db()
+    cursor = db.cursor()
+    row = cursor.execute(
+        'SELECT 1 FROM page_likes WHERE target_type = ? AND target_id = ? AND userid = ?',
+        (target_type, target_id, userid)
+    ).fetchone()
+    if not row:
+        db.close()
+        return False
+
+    cursor.execute(
+        'DELETE FROM page_likes WHERE target_type = ? AND target_id = ? AND userid = ?',
+        (target_type, target_id, userid)
+    )
+    db.commit()
+    db.close()
+    decrement_page_likes(target_type, target_id)
+    return True
