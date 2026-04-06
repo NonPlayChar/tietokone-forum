@@ -5,8 +5,13 @@
 {% block content %}
 <div>
   <div id="post-page">
-    <h1>{{ post.get('title') }}</h1>
     <form action="/edit/{{ post.get('postid') }}" method="post">
+        <h1>Title</h1>
+        <br>
+        <input type="text" name="title" value="{{ post.get('title') }}"></input>
+        <br>
+        <h2>Content</h2>
+        <br>
         <textarea name="content" rows="5" cols="40">{{ post.get('content') }}</textarea>
         <br><br>
         <input type="submit" value="Päivitä postaus">
