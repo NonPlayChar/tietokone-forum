@@ -194,7 +194,7 @@ div.comment {
     background-color: #000000;
 }
 
-textarea, input#query {
+textarea, input {
     width: fit-content;
     padding: 10px;
     border: solid;
