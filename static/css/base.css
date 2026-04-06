@@ -14,7 +14,7 @@ body {
 
 
 nav {
-    background-color: rgb(87, 87, 87); /* Background color of the nav */
+    background-color: rgb(70, 70, 70); /* Background color of the nav */
     padding: 20px; /* Padding around the nav */
     border-radius: 4px;
     margin-bottom: 10px;
@@ -43,12 +43,14 @@ nav ul li a {
     color: white; /* Text color */
     text-decoration: none; /* Remove underline */
     padding: 8px;
-    background-color: rgb(122, 122, 122);
+    background-color: rgb(133, 133, 133);
     border-radius: 3px;
+    transition: padding 0.3s;;
 }
 nav ul li a:hover {
     background-color: lightgrey; /* Change background on hover */
     color: black; /* Change text color on hover */
+    padding: 15px;
 }
 /* Optional: Style for the home button */
 li#home {
@@ -154,8 +156,8 @@ form#login-form input[type="text"], form#login-form input[type="password"] {
     background-color: #646464;
 }
 
-form#login-form input[type="submit"] {
-    width: 100%;
+form input[type="submit"] {
+    width: fit-content;
     padding: 10px;
     background-color: #acacac; /* Green background */
     color: white; /* White text */
@@ -184,4 +186,17 @@ div.comment {
     border-color: rgb(255, 255, 255);
     border-radius: 4px;
     width: fit-content;
+    background-image: url('../images/postbackground.png');
+    background-size: auto;
+    background-color: #000000;
 }
+
+textarea, input#query {
+    width: fit-content;
+    padding: 10px;
+    border: solid;
+    border-color: rgb(29, 29, 29);
+    border-radius: 4px;
+    background-color: #646464;
+}
+
