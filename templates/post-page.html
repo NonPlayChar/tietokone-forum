@@ -12,6 +12,10 @@
         <a href="/edit/{{ post.get('postid') }}" id="edit">Muokkaa postausta</a>
     {% endif %}
     <p>{{ post.get('timestamp') }}</p>
+    <p>Käyntiä: {{ stats.get('visits') }} | Tykkäyksiä: {{ stats.get('likes') }}</p>
+    <form action="{{ url_for('like_post', postid=post.get('postid')) }}" method="post">
+      <button type="submit">Tykkää postausta</button>
+    </form>
   </div>
   <div id="comments">
     <h2>Keskustelu</h2>

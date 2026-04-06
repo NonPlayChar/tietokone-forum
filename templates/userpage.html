@@ -5,7 +5,10 @@
 {% block content %}
   <div>
     <h1>Käyttäjän {{ user.get('username') }} profiili</h1>
-    <p></p>
+    <p>Käyntiä: {{ stats.get('visits') }} | Tykkäyksiä: {{ stats.get('likes') }}</p>
+    <form action="{{ url_for('like_user', userid=user.get('userid')) }}" method="post">
+      <button type="submit">Tykkää profiilista</button>
+    </form>
   </div>
 
   <div>
