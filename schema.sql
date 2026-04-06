@@ -27,8 +27,11 @@ CREATE TABLE IF NOT EXISTS comments (
   FOREIGN KEY (userid) REFERENCES userdata(userid) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS pages (
-  pageid     INTEGER PRIMARY KEY,
-  visits     INTEGER,
-  likes      INTEGER
+CREATE TABLE IF NOT EXISTS page_stats (
+  statid      INTEGER PRIMARY KEY,
+  target_type TEXT NOT NULL CHECK(target_type IN ('user','post')),
+  target_id   INTEGER NOT NULL,
+  visits      INTEGER NOT NULL DEFAULT 0,
+  likes       INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(target_type, target_id)
 );
