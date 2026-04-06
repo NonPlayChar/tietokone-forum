@@ -14,10 +14,11 @@ body {
 
 
 nav {
-    background-color: gray; /* Background color of the nav */
+    background-color: rgb(87, 87, 87); /* Background color of the nav */
     padding: 20px; /* Padding around the nav */
     border-radius: 4px;
     margin-bottom: 10px;
+    margin: 20px;
 }
 
 nav ul {
@@ -42,7 +43,7 @@ nav ul li a {
     color: white; /* Text color */
     text-decoration: none; /* Remove underline */
     padding: 8px;
-    background-color: darkgrey;
+    background-color: rgb(122, 122, 122);
     border-radius: 3px;
 }
 nav ul li a:hover {
