@@ -186,3 +186,36 @@ def fetch_comments(postid):
     for comment in fetch_result:
         comments.append(to_dict(column_names, comment))
     return comments
+
+
+def fetch_page_stats(target_type, target_id):
+    db = get_db()
+    cursor = db.cursor()
+    row = cursor.execute(
+        'SELECT statid, target_type, target_id, visits, likes FROM page_stats WHERE target_type = ? AND target_id = ?', (target_type, target_id)).fetchone()
+    if not row:
+        cursor.execute(
+            'INSERT INTO page_stats (target_type, target_id) VALUES (?, ?)', (target_type, target_id))
+        db.commit()
+        row = cursor.execute(
+            'SELECT statid, target_type, target_id, visits, likes FROM page_stats WHERE target_type = ? AND target_id = ?', (target_type, target_id)).fetchone()
+    column_names = [description[0] for description in cursor.description]
+    result = to_dict(column_names, row)
+    db.close()
+    return result
+
+
+def increment_page_visits(target_type, target_id):
+    db = get_db()
+    db.execute('INSERT OR IGNORE INTO page_stats (target_type, target_id) VALUES (?, ?)', (target_type, target_id))
+    db.execute('UPDATE page_stats SET visits = visits + 1 WHERE target_type = ? AND target_id = ?', (target_type, target_id))
+    db.commit()
+    db.close()
+
+
+def increment_page_likes(target_type, target_id):
+    db = get_db()
+    db.execute('INSERT OR IGNORE INTO page_stats (target_type, target_id) VALUES (?, ?)', (target_type, target_id))
+    db.execute('UPDATE page_stats SET likes = likes + 1 WHERE target_type = ? AND target_id = ?', (target_type, target_id))
+    db.commit()
+    db.close()
