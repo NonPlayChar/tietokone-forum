@@ -45,12 +45,13 @@ nav ul li a {
     padding: 8px;
     background-color: rgb(133, 133, 133);
     border-radius: 3px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     transition: padding 0.3s;;
 }
 nav ul li a:hover {
     background-color: lightgrey; /* Change background on hover */
     color: black; /* Change text color on hover */
-    padding: 15px;
+    padding: 10px;
 }
 /* Optional: Style for the home button */
 li#home {
@@ -78,6 +79,7 @@ a#delete {
     border-radius: 3px;
     background-color: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 a#edit {
@@ -86,6 +88,7 @@ a#edit {
     border-radius: 3px;
     background-color: rgb(90, 90, 90);
     color: rgb(232, 232, 232);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 div.post {
