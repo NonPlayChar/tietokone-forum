@@ -4,7 +4,7 @@ Verkkosovelluksen toimintaa voi kokeilla seuraavanlaisesti:
 <br><br>
 <b>Sovelluksen ylösajaminen</b>
 1. Lataa ja pura zip-tiedosto
-2. Aseta nykiseksi hakemistoksi kansio `/tikawe` ja aja komento `flask run`
+2. Aja komento `flask run`
 4. Avaa sovellus seuraamalla linkkiä komentoriviltä esim.`127.0.0.1:5000`
 ***
 <br>
