@@ -1,13 +1,29 @@
+import time
 from flask import Flask, request, render_template, redirect, session, abort, url_for
 import database as db
 from functions import secret_key
 from functools import wraps
 
+VISIT_COOLDOWN_SECONDS = 300    # 5 minutes
+
 app = Flask(__name__)
 app.secret_key = secret_key()
 db.initiate_database()
 
-loggedin_user = None
+
+def should_increment_visit(target_type, target_id):
+    key = f"{target_type}:{target_id}"
+    last_page_visits = session.get('last_page_visits', {})
+    if not isinstance(last_page_visits, dict):
+        last_page_visits = {}
+
+    now = int(time.time())
+    last_visit = last_page_visits.get(key)
+    if last_visit is None or now - int(last_visit) >= VISIT_COOLDOWN_SECONDS:
+        last_page_visits[key] = now
+        session['last_page_visits'] = last_page_visits
+        return True
+    return False
 
 
 def isAuth(f):
@@ -80,7 +96,16 @@ def login():
 def user_page(userid: int):
     posts = db.fetch_userposts(userid)
     user = db.fetch_user(userid)
-    return render_template('userpage.html', posts=posts, user=user)
+    if should_increment_visit('user', userid):
+        db.increment_page_visits('user', userid)
+    stats = db.fetch_page_stats('user', userid)
+    return render_template('userpage.html', posts=posts, user=user, stats=stats)
+
+
+@app.route('/like/user/<int:userid>', methods=['POST'])
+def like_user(userid: int):
+    db.increment_page_likes('user', userid)
+    return redirect(url_for('user_page', userid=userid))
 
 
 # If a post had a link to this it'd be pretty annoying
@@ -110,13 +135,22 @@ def post_page(postid: int):
             return redirect(url_for('login'))
         comment = request.form['comment']
         db.create_comment(session['userid'], postid, comment)
-        redirect(url_for('post_page', postid=postid))
+        return redirect(url_for('post_page', postid=postid))
 
+    if should_increment_visit('post', postid):
+        db.increment_page_visits('post', postid)
     post = db.fetch_post(postid)
     comments = db.fetch_comments(postid)
     for comment in comments:
         comment['username'] = db.fetch_user(comment['userid']).get('username')
-    return render_template('post-page.html', post=post, comments=comments)
+    stats = db.fetch_page_stats('post', postid)
+    return render_template('post-page.html', post=post, comments=comments, stats=stats)
+
+
+@app.route('/like/post/<int:postid>', methods=['POST'])
+def like_post(postid: int):
+    db.increment_page_likes('post', postid)
+    return redirect(url_for('post_page', postid=postid))
 
 
 @app.route('/delete-post/<int:postid>', methods=['GET', 'POST'])
