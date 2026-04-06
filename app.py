@@ -96,15 +96,31 @@ def login():
 def user_page(userid: int):
     posts = db.fetch_userposts(userid)
     user = db.fetch_user(userid)
-    if should_increment_visit('user', userid):
-        db.increment_page_visits('user', userid)
+    if userid != session.get('userid'):
+        if should_increment_visit('user', userid):
+            db.increment_page_visits('user', userid)
     stats = db.fetch_page_stats('user', userid)
-    return render_template('userpage.html', posts=posts, user=user, stats=stats)
+    liked = False
+    if session.get('userid'):
+        liked = db.has_user_liked('user', userid, session['userid'])
+    return render_template('userpage.html', posts=posts, user=user, stats=stats, liked=liked)
 
 
 @app.route('/like/user/<int:userid>', methods=['POST'])
 def like_user(userid: int):
-    db.increment_page_likes('user', userid)
+    user_id = session.get('userid')
+    if not user_id:
+        return redirect(url_for('login'))
+    db.create_page_like('user', userid, user_id)
+    return redirect(url_for('user_page', userid=userid))
+
+
+@app.route('/unlike/user/<int:userid>', methods=['POST'])
+def unlike_user(userid: int):
+    user_id = session.get('userid')
+    if not user_id:
+        return redirect(url_for('login'))
+    db.delete_page_like('user', userid, user_id)
     return redirect(url_for('user_page', userid=userid))
 
 
@@ -144,12 +160,27 @@ def post_page(postid: int):
     for comment in comments:
         comment['username'] = db.fetch_user(comment['userid']).get('username')
     stats = db.fetch_page_stats('post', postid)
-    return render_template('post-page.html', post=post, comments=comments, stats=stats)
+    liked = False
+    if session.get('userid'):
+        liked = db.has_user_liked('post', postid, session['userid'])
+    return render_template('post-page.html', post=post, comments=comments, stats=stats, liked=liked)
 
 
 @app.route('/like/post/<int:postid>', methods=['POST'])
 def like_post(postid: int):
-    db.increment_page_likes('post', postid)
+    user_id = session.get('userid')
+    if not user_id:
+        return redirect(url_for('login'))
+    db.create_page_like('post', postid, user_id)
+    return redirect(url_for('post_page', postid=postid))
+
+
+@app.route('/unlike/post/<int:postid>', methods=['POST'])
+def unlike_post(postid: int):
+    user_id = session.get('userid')
+    if not user_id:
+        return redirect(url_for('login'))
+    db.delete_page_like('post', postid, user_id)
     return redirect(url_for('post_page', postid=postid))
 
 
@@ -169,8 +200,9 @@ def delete_page(postid, post):
 @isAuth
 def edit_page(postid, post):
     if request.method == 'POST':
+        update_title = request.form['title']
         updated_desc = request.form['content']
-        db.update_content(updated_desc, postid)
+        db.update_content(update_title, updated_desc, postid)
         return redirect(url_for('post_page', postid=postid))
     return render_template('edit-post.html', post=post)
 
