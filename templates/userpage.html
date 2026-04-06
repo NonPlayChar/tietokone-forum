@@ -6,9 +6,17 @@
   <div>
     <h1>Käyttäjän {{ user.get('username') }} profiili</h1>
     <p>Käyntiä: {{ stats.get('visits') }} | Tykkäyksiä: {{ stats.get('likes') }}</p>
-    <form action="{{ url_for('like_user', userid=user.get('userid')) }}" method="post">
-      <button type="submit">Tykkää profiilista</button>
-    </form>
+    {% if session.get('userid') %}
+      {% if not liked %}
+        <form action="{{ url_for('like_user', userid=user.get('userid')) }}" method="post">
+          <button type="submit">Tykkää profiilista</button>
+        </form>
+      {% else %}
+        <form action="{{ url_for('unlike_user', userid=user.get('userid')) }}" method="post">
+          <button type="submit">Poista tykkäys profiilista</button>
+        </form>
+      {% endif %}
+    {% endif %}
   </div>
 
   <div>
