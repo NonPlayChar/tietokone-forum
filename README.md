@@ -24,6 +24,14 @@ Tämän jälkeen voimme aloittaa kokeilemaan kuinka verkkosivusto toimii
 Sivustossa on vielä paljon asioita jotka tulee käsitellä ennen lopullista palautusta.<br>
 Error handling, edge cases, turvatoiminnot, QoL toimintoja, mahdollinen CSS:n hiominen, postaukseen kommentoimisen mahdollisuus, kuvien lisääminen, profiilin muokkaaminen, tunnettujen haavoittuvuuksien käsittely, mahdollinen ylläpito käyttäjä, debuging consoliin.
 
+
+```
+# They just run:
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
 <br><br><br>
 ***
 <sub>Ominaisuuksia päivitetään sitä mukaan kun ideoita tulee ja muistuu mieleen</sub>
