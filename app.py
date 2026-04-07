@@ -1,6 +1,7 @@
 import time
 from flask import Flask, request, render_template, redirect, session, abort, url_for
 import database as db
+import sqlite3
 from functions import secret_key
 from functools import wraps
 
@@ -34,8 +35,9 @@ def isAuth(f):
             return redirect(url_for('login'))
         if not postid:
             return f(*args, **kwargs)
-        post = db.fetch_post(postid)
-        if not post:
+        try:
+            post = db.fetch_post(postid)
+        except ValueError:
             return abort(404)
 
         if post.get('userid') != user_id:
@@ -57,14 +59,11 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        result = db.create_user(username, password)
-
-        if type(result) == Exception:
-            print('Username already in use!')
-            error_message = str(result)
-            return render_template('register.html', error=error_message)
-
-        return redirect(url_for('success'))
+        try:
+            db.create_user(username, password)
+            return redirect(url_for('success'))
+        except sqlite3.IntegrityError:
+            return render_template('register.html', error='Käyttäjänimi on jo olemassa!')
     return render_template('register.html')
 
 
@@ -80,22 +79,24 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        result = db.login_user(username, password)
-        if type(result) == ValueError:
-            print(str(result))
-            error_message = str(result)
-            return render_template('login.html', error=error_message)
-        if result:
+        try:
+            result = db.login_user(username, password)
             session['userid'] = result[0]
             session['username'] = result[1]
             return redirect(next_url or url_for('index'))
+        except ValueError as e:
+            error_message = str(e)
+            return render_template('login.html', error=error_message)
     return render_template('login.html')
 
 
 @app.route('/user/<int:userid>')
 def user_page(userid: int):
-    posts = db.fetch_userposts(userid)
-    user = db.fetch_user(userid)
+    try:
+        posts = db.fetch_userposts(userid)
+        user = db.fetch_user(userid)
+    except ValueError:
+        return abort(404)
     if userid != session.get('userid'):
         if should_increment_visit('user', userid):
             db.increment_page_visits('user', userid)
@@ -111,7 +112,10 @@ def like_user(userid: int):
     user_id = session.get('userid')
     if not user_id:
         return redirect(url_for('login'))
-    db.create_page_like('user', userid, user_id)
+    try:
+        db.create_page_like('user', userid, user_id)
+    except sqlite3.Error:
+        pass  # Already liked or error, just redirect
     return redirect(url_for('user_page', userid=userid))
 
 
@@ -120,7 +124,10 @@ def unlike_user(userid: int):
     user_id = session.get('userid')
     if not user_id:
         return redirect(url_for('login'))
-    db.delete_page_like('user', userid, user_id)
+    try:
+        db.delete_page_like('user', userid, user_id)
+    except sqlite3.Error:
+        pass
     return redirect(url_for('user_page', userid=userid))
 
 
@@ -139,8 +146,11 @@ def posting_page():
     if request.method == 'POST':
         t = request.form['title']
         content = request.form['content']
-        db.create_post(session['userid'], t, content)
-        return redirect(url_for('index'))
+        try:
+            db.create_post(session['userid'], t, content)
+            return redirect(url_for('index'))
+        except sqlite3.Error:
+            return render_template('create-post.html', error='Failed to create post.')
     return render_template('create-post.html')
 
 
@@ -150,15 +160,25 @@ def post_page(postid: int):
         if not session.get('userid'):
             return redirect(url_for('login'))
         comment = request.form['comment']
-        db.create_comment(session['userid'], postid, comment)
+        try:
+            db.create_comment(session['userid'], postid, comment)
+        except sqlite3.Error:
+            # maybe flash error, for now, just redirect
+            pass
         return redirect(url_for('post_page', postid=postid))
 
     if should_increment_visit('post', postid):
         db.increment_page_visits('post', postid)
-    post = db.fetch_post(postid)
+    try:
+        post = db.fetch_post(postid)
+    except ValueError:
+        return abort(404)
     comments = db.fetch_comments(postid)
     for comment in comments:
-        comment['username'] = db.fetch_user(comment['userid']).get('username')
+        try:
+            comment['username'] = db.fetch_user(comment['userid']).get('username')
+        except ValueError:
+            comment['username'] = 'Unknown'
     stats = db.fetch_page_stats('post', postid)
     liked = False
     if session.get('userid'):
@@ -171,7 +191,10 @@ def like_post(postid: int):
     user_id = session.get('userid')
     if not user_id:
         return redirect(url_for('login'))
-    db.create_page_like('post', postid, user_id)
+    try:
+        db.create_page_like('post', postid, user_id)
+    except sqlite3.Error:
+        pass
     return redirect(url_for('post_page', postid=postid))
 
 
@@ -180,7 +203,10 @@ def unlike_post(postid: int):
     user_id = session.get('userid')
     if not user_id:
         return redirect(url_for('login'))
-    db.delete_page_like('post', postid, user_id)
+    try:
+        db.delete_page_like('post', postid, user_id)
+    except sqlite3.Error:
+        pass
     return redirect(url_for('post_page', postid=postid))
 
 
@@ -189,8 +215,11 @@ def unlike_post(postid: int):
 def delete_page(postid, post):
     if request.method == 'POST':
         if request.form['action'] == 'Poista':
-            db.delete_post(postid)
-            return redirect(url_for('index'))
+            try:
+                db.delete_post(postid)
+                return redirect(url_for('index'))
+            except sqlite3.Error:
+                return render_template('delete-post.html', post=post, error='Failed to delete post.')
         elif request.form['action'] == 'Palaa takaisin':
             return redirect(url_for('index'))
     return render_template('delete-post.html', post=post)
@@ -202,8 +231,11 @@ def edit_page(postid, post):
     if request.method == 'POST':
         update_title = request.form['title']
         updated_desc = request.form['content']
-        db.update_content(update_title, updated_desc, postid)
-        return redirect(url_for('post_page', postid=postid))
+        try:
+            db.update_content(update_title, updated_desc, postid)
+            return redirect(url_for('post_page', postid=postid))
+        except sqlite3.Error:
+            return render_template('edit-post.html', post=post, error='Failed to update post.')
     return render_template('edit-post.html', post=post)
 
 
