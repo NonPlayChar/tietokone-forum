@@ -150,7 +150,7 @@ label#username, label#password {
 }
 
 form#login-form input[type="text"], form#login-form input[type="password"] {
-    width: 100%;
+    width: max-content;
     padding: 10px;
     margin-bottom: 15px;
     border: solid;
