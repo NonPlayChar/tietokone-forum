@@ -47,8 +47,6 @@ def create_user(uname, pswrd, pfp=None):
             (userid, username, password, pfp, joindate) VALUES (?, ?, ?, ?, datetime('now'))
         ''', (uid, username, password, pfp))
         db.commit()
-    except sqlite3.IntegrityError:
-        raise ValueError('Username already in use!')
     except sqlite3.Error as e:
         print(f'Database error in create_user: {e}')
         raise
@@ -62,13 +60,10 @@ def login_user(uname, pswrd) -> any:
         epwrd = hashit(pswrd)
         result = db.execute('''SELECT userid, username, password FROM userdata
                    WHERE username = ?
-                   ''', (uname,)).fetchall()
-        if len(result) == 0:
+                   ''', (uname,)).fetchone()
+        if not result or epwrd != result[2]:
             raise ValueError('Invalid username or password!')
-        result = result[0]
-        if epwrd == result[2]:
-            return result[0:2]
-        raise ValueError('Invalid username or password!')
+        return result[0], result[1]
     except sqlite3.Error as e:
         print(f'Database error in login_user: {e}')
         raise
