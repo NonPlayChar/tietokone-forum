@@ -6,6 +6,7 @@
         <p>Oletko varma, että haluat haluat poistaa postauksen?</p>
         <form action="/delete-post/{{ post.get('postid') }}" method="post">
             <input type="submit" name="action" value="Palaa takaisin">
+            <input type="hidden" name="csrf_token" value="{{ session.get('csrf_token') }}">
             <input type="submit" name="action" value="Poista">
         </form>
 {% endblock %}

@@ -14,6 +14,7 @@
         <br>
         <textarea name="content" rows="5" cols="40" required maxlength="500" >{{ post.get('content') }}</textarea>
         <br><br>
+        <input type="hidden" name="csrf_token" value="{{ session.get('csrf_token') }}">
         <input type="submit" value="Päivitä postaus">
     </form>
   </div>
