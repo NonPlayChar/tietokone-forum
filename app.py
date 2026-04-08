@@ -75,10 +75,12 @@ def success():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    next_url = request.args.get('next')
+    if request.method == 'GET':
+        return render_template('login.html', next_page=request.referrer)
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
+        next_url = request.form.get('next_page') or url_for('index')
 
         try:
             result = db.login_user(username, password)
@@ -88,7 +90,7 @@ def login():
         except ValueError as e:
             error_message = str(e)
             flash(error_message)
-            return redirect(url_for('login'))
+            return redirect(url_for('login'), next_page=next_url)
     return render_template('login.html')
 
 
