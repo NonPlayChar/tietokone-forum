@@ -1,5 +1,5 @@
 import time
-from flask import Flask, request, render_template, redirect, session, abort, url_for
+from flask import Flask, request, render_template, redirect, session, abort, url_for, flash
 import database as db
 import sqlite3
 from functions import secret_key
@@ -63,7 +63,8 @@ def register():
             db.create_user(username, password)
             return redirect(url_for('success'))
         except sqlite3.IntegrityError:
-            return render_template('register.html', error='Käyttäjänimi on jo olemassa!')
+            flash('Käyttäjänimi on jo käytössä.')
+            return redirect(url_for('register'))
     return render_template('register.html')
 
 
@@ -86,7 +87,8 @@ def login():
             return redirect(next_url or url_for('index'))
         except ValueError as e:
             error_message = str(e)
-            return render_template('login.html', error=error_message)
+            flash(error_message)
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 
@@ -150,7 +152,8 @@ def posting_page():
             db.create_post(session['userid'], t, content)
             return redirect(url_for('index'))
         except sqlite3.Error:
-            return render_template('create-post.html', error='Failed to create post.')
+            flash('Failed to create post. Please try again.')
+            return redirect(url_for('posting_page'))
     return render_template('create-post.html')
 
 
@@ -242,7 +245,11 @@ def edit_page(postid, post):
 @app.route("/search")
 def search():
     query = request.args.get("query")
-    results = db.search_post(query) if query else []
+    try:
+        results = db.search_post(query) if query else []
+    except sqlite3.Error:
+        flash('Search failed. Please try again.')
+        redirect(url_for('search'))
     return render_template("search.html", query=query, results=results)
 
 

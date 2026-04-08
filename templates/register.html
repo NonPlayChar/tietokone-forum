@@ -18,11 +18,9 @@
             <br><br>
 
             <input type="submit" value="Luo käyttäjä">
-            {% if error %}
-                <p style="color: red;">{{ error }}</p>
-            {% else %}
-                <p><br></p>
-            {% endif %}
+            {% for message in get_flashed_messages() %}
+            <p style="color: red;"> {{ message }} </p>
+            {% endfor %}
         </form>
     </div>
 <div>
