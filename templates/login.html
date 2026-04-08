@@ -16,7 +16,8 @@
             <br>
             <input type="password" id="password" name="password" required>
             <br><br>
-
+            
+            <input type="hidden" name="next_page", value="{{ next_page }}">
             <input type="submit" value="Kirjaudu sisään">
             {% for message in get_flashed_messages() %}
             <p style="color: red;"> {{ message }} </p>
