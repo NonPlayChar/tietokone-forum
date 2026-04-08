@@ -26,6 +26,11 @@ def should_increment_visit(target_type, target_id):
         return True
     return False
 
+def validate_csrf_token():
+    token_from_form = request.form.get('csrf_token')
+    token_from_session = session.get('csrf_token')
+    if not token_from_form or not token_from_session or token_from_form != token_from_session:
+        abort(403)
 
 def isAuth(f):
     @wraps(f)
@@ -86,6 +91,7 @@ def login():
             result = db.login_user(username, password)
             session['userid'] = result[0]
             session['username'] = result[1]
+            session['csrf_token'] = secret_key()
             return redirect(next_url or url_for('index'))
         except ValueError as e:
             error_message = str(e)
@@ -164,6 +170,7 @@ def post_page(postid: int):
     if request.method == 'POST':
         if not session.get('userid'):
             return redirect(url_for('login'))
+        
         comment = request.form['comment']
         try:
             db.create_comment(session['userid'], postid, comment)
