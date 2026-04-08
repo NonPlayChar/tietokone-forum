@@ -203,3 +203,22 @@ textarea, input {
     background-color: #646464;
 }
 
+div#success {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+
+}
+
+div#success a {
+    text-decoration: none;
+    padding: 10px;
+    background-color: #acacac; /* Green background */
+    color: white; /* White text */
+    border: solid;
+    border-color: rgb(255, 255, 255);
+    border-radius: 4px;
+}

@@ -3,6 +3,8 @@
 {% block title %}Onnistui{% endblock %}
 
 {% block content %}
-<h1>Käyttäjän luonti onnistui!</h1>
-<p>Voit nyt kirjautua sisään</p>
+<div id="success">
+    <h1>Käyttäjän luonti onnistui!</h1>
+    <a href="{{ url_for('login') }}">Voit nyt kirjautua sisään täältä</a>
+</div>
 {% endblock %}
