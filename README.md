@@ -22,11 +22,19 @@ Tämän jälkeen voimme aloittaa kokeilemaan kuinka verkkosivusto toimii
 
 # Todo
 Sivustossa on vielä paljon asioita jotka tulee käsitellä ennen lopullista palautusta.<br>
-Error handling, edge cases, turvatoiminnot, QoL toimintoja, mahdollinen CSS:n hiominen, postaukseen kommentoimisen mahdollisuus, kuvien lisääminen, profiilin muokkaaminen, tunnettujen haavoittuvuuksien käsittely, mahdollinen ylläpito käyttäjä, debuging consoliin.
 
+
+- Profile photos
+- Post link, photo, mention
+- Post include author
+- Links to userpages
+- More search categrories
+- Make `base.css` more readable and organized
+- Changing userdata and delete userdata
+- Check for vulnerabilities
+- Update `readme.md`
 
 ```
-# They just run:
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
